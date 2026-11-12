@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101c15">
+  <meta name="description" content="25 illustrierte Drachenboot-Aufgaben für die Dresden Bulls vom Verein Kanusport Dresden.">
+  <title>Drachenboot-Bingo · Dresden Bulls</title>
+  <script>
+    (() => {
+      const themeKey = "dresden-bulls-bingo:theme";
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+      let preference = "system";
+      try {
+        const saved = localStorage.getItem(themeKey);
+        if (saved === "light" || saved === "dark") preference = saved;
+      } catch {
+        // Use the device setting when storage is unavailable.
+      }
+
+      function applyTheme() {
+        const dark = preference === "dark" || (preference === "system" && systemTheme.matches);
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+      }
+
+      applyTheme();
+      systemTheme.addEventListener("change", applyTheme);
+      document.addEventListener("DOMContentLoaded", () => {
+        const choices = document.querySelector("#theme");
+        choices.querySelector(`[value="${preference}"]`).checked = true;
+        choices.disabled = false;
+        choices.addEventListener("change", (event) => {
+          preference = event.target.value;
+          applyTheme();
+          try {
+            if (preference === "system") localStorage.removeItem(themeKey);
+            else localStorage.setItem(themeKey, preference);
+          } catch {
+            // The current tab can still switch themes.
+          }
+        });
+      });
+    })();
+  </script>
+  <link rel="stylesheet" href="bingo.css">
+  <script src="english.js" defer></script>
+  <script src="bingo.js" defer></script>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <a class="club" lang="de" href="https://verein-kanusport-dresden.de/">
+          <img src="assets/dresden-bulls-logo.svg" width="1056" height="1056" alt="">
+          <span><strong>Dresden Bulls</strong><small>Verein Kanusport Dresden e. V.</small></span>
+        </a>
+        <h1><span id="heading-prefix">Drachenboot-</span><br>Bingo</h1>
+        <p class="rules">Markiere erledigte Aufgaben. Fünf Felder in einer Reihe, Spalte oder Diagonale ergeben ein Bingo.</p>
+      </div>
+      <img class="skyline" src="assets/dresden-altstadt.webp" alt="Silhouette der Dresdner Altstadt mit Hofkirche und Frauenkirche" width="1400" height="242">
+    </div>
+  </header>
+  <main class="main">
+    <div class="board-bar">
+      <div class="progress">
+        <p id="status" aria-live="polite" aria-atomic="true"><strong>0 von 25</strong> erledigt</p>
+        <progress id="progress" value="0" max="25" aria-label="Erledigte Aufgaben"></progress>
+      </div>
+      <div class="actions">
+        <fieldset id="theme" class="segmented-control" aria-label="Farbschema" disabled>
+          <label class="segment">
+            <input type="radio" name="theme" value="system" aria-label="Systemdesign" checked>
+            <span class="segment-face">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="13" rx="2"/>
+                <path stroke-linecap="round" d="M8 21h8m-4-4v4"/>
+              </svg>
+            </span>
+            <span class="segment-tip" aria-hidden="true">Systemdesign</span>
+          </label>
+          <label class="segment">
+            <input type="radio" name="theme" value="light" aria-label="Heller Modus">
+            <span class="segment-face">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/>
+            <path stroke-linecap="round" d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42m0-14.14-1.42 1.42m-11.3 11.3-1.42 1.42"/>
+          </svg>
+            </span>
+            <span class="segment-tip" aria-hidden="true">Heller Modus</span>
+          </label>
+          <label class="segment">
+            <input type="radio" name="theme" value="dark" aria-label="Dunkelmodus">
+            <span class="segment-face">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.9 13.34A9 9 0 0 1 10.66 3.1 9 9 0 1 0 20.9 13.34Z"/>
+          </svg>
+            </span>
+            <span class="segment-tip" aria-hidden="true">Dunkelmodus</span>
+          </label>
+        </fieldset>
+        <fieldset id="language" class="segmented-control language-picker" aria-label="Sprache" disabled>
+          <label class="segment" lang="de">
+            <input type="radio" name="language" value="de" aria-label="Deutsch" checked>
+            <span class="segment-face" aria-hidden="true">DE</span>
+            <span class="segment-tip" aria-hidden="true">Deutsch</span>
+          </label>
+          <label class="segment" lang="en">
+            <input type="radio" name="language" value="en" aria-label="English">
+            <span class="segment-face" aria-hidden="true">EN</span>
+            <span class="segment-tip" aria-hidden="true">English</span>
+          </label>
+        </fieldset>
+        <div class="board-buttons">
+          <button type="button" id="reset" class="tool-button" aria-label="Zurücksetzen" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 11a9 9 0 1 1 1.9 6.5M3 5v6h6"/>
+            </svg>
+            <span class="segment-tip" aria-hidden="true">Zurücksetzen</span>
+          </button>
+          <button type="button" id="print" class="tool-button primary" aria-label="Drucken">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+              <path d="M6 14h12v7H6zm12-2h.01"/>
+            </svg>
+            <span class="segment-tip" aria-hidden="true">Drucken</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <p class="board-hint">Wische seitlich, um alle fünf Spalten zu sehen.</p>
+    <div class="board-scroll" tabindex="0" role="region" aria-label="Bingokarte mit fünf Reihen und fünf Spalten">
+      <ol class="board" aria-label="25 Bingo-Aufgaben">
+        <li>
+          <button type="button" class="tile" data-scene="01-elbtraining-dresden" aria-pressed="false" aria-labelledby="title-1" aria-describedby="task-1">
+            <span class="tile-art">
+              <img src="assets/01-elbtraining-dresden.webp" width="650" height="650" alt="">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-1">Elbtraining in Dresden</strong>
+              <span id="task-1">Paddle beim Elbtraining mit Blick auf die Dresdner Altstadt mit.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Elbtraining in Dresden" aria-controls="task-details" aria-describedby="task-1" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="02-blaues-wunder" aria-pressed="false" aria-labelledby="title-2" aria-describedby="task-2">
+            <span class="tile-art">
+              <img src="assets/02-blaues-wunder.webp" width="650" height="650" alt="">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-2">Blaues Wunder</strong>
+              <span id="task-2">Paddle mit dem Team unter dem Blauen Wunder hindurch.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Blaues Wunder" aria-controls="task-details" aria-describedby="task-2" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="03-fahrt-nach-pillnitz" aria-pressed="false" aria-labelledby="title-3" aria-describedby="task-3">
+            <span class="tile-art">
+              <img src="assets/03-fahrt-nach-pillnitz.webp" width="650" height="650" alt="">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-3">Fahrt nach Pillnitz</strong>
+              <span id="task-3">Paddle stromaufwärts bis zum Schloss Pillnitz.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Fahrt nach Pillnitz" aria-controls="task-details" aria-describedby="task-3" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="04-trainingslager-kriebstein" aria-pressed="false" aria-labelledby="title-4" aria-describedby="task-4">
+            <span class="tile-art">
+              <img src="assets/04-trainingslager-kriebstein.webp" width="650" height="650" alt="">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-4">Trainingslager Kriebstein</strong>
+              <span id="task-4">Mach eine Trainingseinheit auf der Talsperre Kriebstein mit.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Trainingslager Kriebstein" aria-controls="task-details" aria-describedby="task-4" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="05-sonnenuntergang-elbe" aria-pressed="false" aria-labelledby="title-5" aria-describedby="task-5">
+            <span class="tile-art">
+              <img src="assets/05-sonnenuntergang-elbe.webp" width="650" height="650" alt="">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-5">Sonnenuntergang auf der Elbe</strong>
+              <span id="task-5">Erlebe einen Sonnenuntergang vom Drachenboot aus.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Sonnenuntergang auf der Elbe" aria-controls="task-details" aria-describedby="task-5" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="06-winterpaddeln" aria-pressed="false" aria-labelledby="title-6" aria-describedby="task-6">
+            <span class="tile-art">
+              <img src="assets/06-winterpaddeln.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-6">Winterpaddeln</strong>
+              <span id="task-6">Nimm mit Schwimmweste und warmer Ausrüstung am Wintertraining teil.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Winterpaddeln" aria-controls="task-details" aria-describedby="task-6" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="07-mondscheinfahrt" aria-pressed="false" aria-labelledby="title-7" aria-describedby="task-7">
+            <span class="tile-art">
+              <img src="assets/07-mondscheinfahrt.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-7">Mondscheinfahrt</strong>
+              <span id="task-7">Paddle bei einer organisierten Ausfahrt im Mondschein mit.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Mondscheinfahrt" aria-controls="task-details" aria-describedby="task-7" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="08-schloessercup" aria-pressed="false" aria-labelledby="title-8" aria-describedby="task-8">
+            <span class="tile-art">
+              <img src="assets/08-schloessercup.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-8">Schlössercup</strong>
+              <span id="task-8">Paddle beim Dresdner Schlössercup mit oder hilf am Regattatag.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Schlössercup" aria-controls="task-details" aria-describedby="task-8" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="09-bleiloch-langstrecke" aria-pressed="false" aria-labelledby="title-9" aria-describedby="task-9">
+            <span class="tile-art">
+              <img src="assets/09-bleiloch-langstrecke.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-9">Bleiloch-Langstrecke</strong>
+              <span id="task-9">Fahre die Langstrecke auf der Bleilochtalsperre mit.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Bleiloch-Langstrecke" aria-controls="task-details" aria-describedby="task-9" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="10-vogalonga-venedig" aria-pressed="false" aria-labelledby="title-10" aria-describedby="task-10">
+            <span class="tile-art">
+              <img src="assets/10-vogalonga-venedig.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-10">Vogalonga Venedig</strong>
+              <span id="task-10">Paddle mit dem Team bei der Vogalonga durch Venedig.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Vogalonga Venedig" aria-controls="task-details" aria-describedby="task-10" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="11-saisoneroeffnung" aria-pressed="false" aria-labelledby="title-11" aria-describedby="task-11">
+            <span class="tile-art">
+              <img src="assets/11-saisoneroeffnung.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-11">Saisoneröffnung</strong>
+              <span id="task-11">Sei beim Anpaddeln am VKD-Bootshaus dabei.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Saisoneröffnung" aria-controls="task-details" aria-describedby="task-11" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="12-abpaddeln-im-herbst" aria-pressed="false" aria-labelledby="title-12" aria-describedby="task-12">
+            <span class="tile-art">
+              <img src="assets/12-abpaddeln-im-herbst.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-12">Abpaddeln im Herbst</strong>
+              <span id="task-12">Paddle bei der gemeinsamen Herbstfahrt Richtung Pillnitz mit.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Abpaddeln im Herbst" aria-controls="task-details" aria-describedby="task-12" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="13-teamgrillen" aria-pressed="false" aria-labelledby="title-13" aria-describedby="task-13">
+            <span class="tile-art">
+              <img src="assets/13-teamgrillen.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-13">Teamgrillen</strong>
+              <span id="task-13">Bring etwas fürs Buffet mit und grille mit dem Team an der Herrenaussicht.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Teamgrillen" aria-controls="task-details" aria-describedby="task-13" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="14-vereinsausfahrt-wehlen" aria-pressed="false" aria-labelledby="title-14" aria-describedby="task-14">
+            <span class="tile-art">
+              <img src="assets/14-vereinsausfahrt-wehlen.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-14">Vereinsausfahrt nach Wehlen</strong>
+              <span id="task-14">Fahre mit nach Stadt Wehlen und frühstücke mit dem Team an der Vereinshütte.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Vereinsausfahrt nach Wehlen" aria-controls="task-details" aria-describedby="task-14" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="15-athletiktraining" aria-pressed="false" aria-labelledby="title-15" aria-describedby="task-15">
+            <span class="tile-art">
+              <img src="assets/15-athletiktraining.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-15">Athletiktraining</strong>
+              <span id="task-15">Mach beim Kraft- und Mobilitätstraining im Vereinsraum mit.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Athletiktraining" aria-controls="task-details" aria-describedby="task-15" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="16-trommeln" aria-pressed="false" aria-labelledby="title-16" aria-describedby="task-16">
+            <span class="tile-art">
+              <img src="assets/16-trommeln.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-16">Trommeln</strong>
+              <span id="task-16">Gib bei einer Übung am Bug den Takt auf der Trommel vor.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Trommeln" aria-controls="task-details" aria-describedby="task-16" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="17-steuern" aria-pressed="false" aria-labelledby="title-17" aria-describedby="task-17">
+            <span class="tile-art">
+              <img src="assets/17-steuern.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-17">Steuern</strong>
+              <span id="task-17">Übernimm unter Anleitung das Steuerpaddel am Heck.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Steuern" aria-controls="task-details" aria-describedby="task-17" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="18-bootspflege" aria-pressed="false" aria-labelledby="title-18" aria-describedby="task-18">
+            <span class="tile-art">
+              <img src="assets/18-bootspflege.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-18">Bootspflege</strong>
+              <span id="task-18">Hilf, das Drachenboot an Land zu reinigen.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Bootspflege" aria-controls="task-details" aria-describedby="task-18" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="19-bootstransport" aria-pressed="false" aria-labelledby="title-19" aria-describedby="task-19">
+            <span class="tile-art">
+              <img src="assets/19-bootstransport.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-19">Bootstransport</strong>
+              <span id="task-19">Hilf beim Verladen und prüfe mit dem Team die Spanngurte.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Bootstransport" aria-controls="task-details" aria-describedby="task-19" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="20-neues-paddel" aria-pressed="false" aria-labelledby="title-20" aria-describedby="task-20">
+            <span class="tile-art">
+              <img src="assets/20-neues-paddel.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-20">Neues Paddel</strong>
+              <span id="task-20">Probiere ein anderes Stechpaddel aus und vergleiche Holz und Carbon.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Neues Paddel" aria-controls="task-details" aria-describedby="task-20" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="21-paddeln-bei-regen" aria-pressed="false" aria-labelledby="title-21" aria-describedby="task-21">
+            <span class="tile-art">
+              <img src="assets/21-paddeln-bei-regen.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-21">Paddeln bei Regen</strong>
+              <span id="task-21">Paddle bei einer regulären Trainingseinheit im Regen mit.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Paddeln bei Regen" aria-controls="task-details" aria-describedby="task-21" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="22-teamgeist" aria-pressed="false" aria-labelledby="title-22" aria-describedby="task-22">
+            <span class="tile-art">
+              <img src="assets/22-teamgeist.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-22">Teamgeist</strong>
+              <span id="task-22">Komm mit dem Team am Steg zusammen und macht einen gemeinsamen Teamruf.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Teamgeist" aria-controls="task-details" aria-describedby="task-22" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="23-regatta-erfolg" aria-pressed="false" aria-labelledby="title-23" aria-describedby="task-23">
+            <span class="tile-art">
+              <img src="assets/23-regatta-erfolg.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-23">Regatta-Erfolg</strong>
+              <span id="task-23">Feiere mit dem Team einen Regatta-Erfolg am Ufer.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Regatta-Erfolg" aria-controls="task-details" aria-describedby="task-23" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="24-vereinsabend-dresden" aria-pressed="false" aria-labelledby="title-24" aria-describedby="task-24">
+            <span class="tile-art">
+              <img src="assets/24-vereinsabend-dresden.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-24">Vereinsabend in Dresden</strong>
+              <span id="task-24">Verbringe einen Vereinsabend mit dem Team auf der Terrasse an der Elbe.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Vereinsabend in Dresden" aria-controls="task-details" aria-describedby="task-24" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="tile" data-scene="25-saisonabschluss" aria-pressed="false" aria-labelledby="title-25" aria-describedby="task-25">
+            <span class="tile-art">
+              <img src="assets/25-saisonabschluss.webp" width="650" height="650" alt="" loading="lazy">
+              <span class="check" aria-hidden="true"></span>
+            </span>
+            <span class="tile-copy">
+              <strong id="title-25">Saisonabschluss</strong>
+              <span id="task-25">Schau beim Saisonabschluss mit dem Team das Feuerwerk vom Ufer aus an.</span>
+            </span>
+          </button>
+          <button type="button" class="tile-info" aria-label="Aufgabe: Saisonabschluss" aria-controls="task-details" aria-describedby="task-25" aria-expanded="false" hidden>
+            <span aria-hidden="true">i</span>
+          </button>
+        </li>
+      </ol>
+    </div>
+    <noscript>Zum Abhaken und Speichern deiner Felder muss JavaScript aktiviert sein.</noscript>
+  </main>
+  <dialog id="reset-dialog" aria-labelledby="reset-title">
+    <form method="dialog">
+      <h2 id="reset-title">Bingokarte zurücksetzen?</h2>
+      <p>Damit löschst du alle Markierungen auf diesem Gerät.</p>
+      <div class="actions">
+        <button value="cancel" autofocus>Abbrechen</button>
+        <button value="reset" class="primary">Zurücksetzen</button>
+      </div>
+    </form>
+  </dialog>
+  <div id="task-details" lang="de" popover="auto" role="dialog" aria-labelledby="task-details-title" aria-describedby="task-details-text">
+    <div class="task-card-turn">
+      <div class="task-card-face task-card-front" aria-hidden="true">
+        <img alt="">
+      </div>
+      <div class="task-card-face task-card-back">
+        <div class="task-card-illustration">
+          <img alt="">
+        </div>
+        <div class="task-card-copy">
+          <h2 id="task-details-title"></h2>
+          <p id="task-details-text"></p>
+        </div>
+      </div>
+    </div>
+    <button type="button" id="close-task-details" aria-label="Schließen">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <template id="celebration">
+    <div class="celebration" aria-hidden="true">
+      <div class="fireworks"></div>
+      <div class="celebration-message">
+        <strong class="celebration-word"></strong>
+        <p class="celebration-subtitle"></p>
+      </div>
+    </div>
+  </template>
+</body>
+</html>
