@@ -1,36 +1,36 @@
-# Dresden Bulls · Drachenboot-Bingo
+# Dresden Bulls · Dragon Boat Bingo
 
-Eine statische Bingo-Website mit 25 illustrierten Drachenboot-Aufgaben für die Dresden Bulls vom Verein Kanusport Dresden. Fünf markierte Felder in einer Reihe, Spalte oder Diagonale ergeben ein Bingo. Insgesamt gibt es zwölf Gewinnlinien.
+A static bingo website with 25 illustrated dragon boat challenges for the Dresden Bulls team at Verein Kanusport Dresden. Mark five squares in a row, column, or diagonal to get a bingo. The board has twelve winning lines.
 
-Die Website bietet Deutsch und Englisch, ein helles und ein dunkles Farbschema sowie eine Einstellung, die dem Systemdesign folgt. Der Browser speichert Spielstand, Sprache und Farbschema auf dem jeweiligen Gerät.
+The site supports German and English and offers light, dark, and system appearance settings. The browser saves your progress, language, and appearance settings locally.
 
-## Lokal öffnen
+## Run locally
 
-Öffne `Website/index.html` im Browser. Für die Vorschau über einen lokalen Webserver kannst du aus dem Projektordner auch Python 3 verwenden.
+Open [Website/index.html](Website/index.html) in your browser. To preview the site over HTTP, run this command from the project directory with Python 3 installed.
 
 ```sh
 python3 -m http.server 8000 --bind 127.0.0.1 --directory Website
 ```
 
-Öffne anschließend [die lokale Vorschau](http://127.0.0.1:8000/). Die Website besteht aus HTML, CSS und JavaScript und braucht keinen Build-Schritt.
+Then open the [local preview](http://127.0.0.1:8000/). The browser loads the HTML, CSS, and JavaScript directly from the project files.
 
-## Projektstruktur
+## Project structure
 
-| Pfad | Inhalt |
+| Path | Contents |
 | --- | --- |
-| [`Website/index.html`](Website/index.html) | Spielfeld, deutsche Texte und Bedienelemente |
-| [`Website/bingo.css`](Website/bingo.css) | Bildschirm- und Drucklayout, Farbschemata und Animationen |
-| [`Website/bingo.js`](Website/bingo.js) | Spielregeln, Spielstand, Sprachwechsel und Detailkarten |
-| [`Website/english.js`](Website/english.js) | Englische Texte für die Aufgaben und die Bedienoberfläche |
-| [`Website/assets/`](Website/assets/) | 25 Motive, Altstadtsilhouette und Vereinswappen |
-| [`AGENTS.md`](AGENTS.md) | Hinweise für Änderungen am Projekt |
+| [`Website/index.html`](Website/index.html) | Bingo board, German text, and controls |
+| [`Website/bingo.css`](Website/bingo.css) | Screen and print layouts, appearance settings, and animations |
+| [`Website/bingo.js`](Website/bingo.js) | Game logic, saved progress, language switching, and task details |
+| [`Website/english.js`](Website/english.js) | English task and interface text |
+| [`Website/assets/`](Website/assets/) | 25 illustrations, the Dresden old town skyline, and the team crest |
+| [`AGENTS.md`](AGENTS.md) | Guidance for making and verifying changes |
 
-## Spielen und drucken
+## Play and print
 
-Tippe auf ein Feld, um es abzuhaken. Das Eselsohr unten rechts öffnet die Detailkarte mit Bild und Aufgabe. Im Handy-Hochformat kannst du seitlich durch die fünf Spalten wischen. Im Handy-Querformat sind alle 25 Felder auf einmal sichtbar.
+Tap a square to mark it as complete. The folded corner at the bottom right opens a detail card with the illustration and task. In phone portrait mode, swipe sideways to reach all five columns. In phone landscape mode, all 25 squares fit on screen.
 
-Über das Druckersymbol öffnest du die Druckvorschau. Die Karte ist für ein A4-Blatt im Hochformat ausgelegt. Der Ausdruck enthält alle Aufgaben und die aktuellen Markierungen.
+Use the printer icon to open the print preview. The print layout fits on one portrait A4 page and includes all tasks and current marks.
 
-## Dateien fürs Repository
+## Repository contents
 
-Übernimm die Website-Dateien einschließlich `Website/assets/` und die beiden Markdown-Dateien in die Versionsverwaltung. Das HTML-ZIP dient als Downloadpaket. `.DS_Store` ist eine lokale macOS-Datei.
+Track the website files, including `Website/assets/`, and both Markdown files. The HTML ZIP is a downloadable bundle. `.DS_Store` is local macOS metadata.
